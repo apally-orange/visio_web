@@ -33,31 +33,37 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final IFrameElement _iframeElement = IFrameElement();
-
   @override
   void initState() {
     super.initState();
 
-    _iframeElement.height = '500';
-    _iframeElement.width = '500';
-    _iframeElement.src = 'https://www.youtube.com/embed/RQzhAQlg2JQ';
-    _iframeElement.style.border = 'none';
+    // final _iframeElement = IFrameElement();
+
+    // _iframeElement.height = '500';
+    // _iframeElement.width = '500';
+    // _iframeElement.src = 'https://www.youtube.com/embed/RQzhAQlg2JQ';
+    // _iframeElement.style.border = 'none';
+
+    final element = DivElement();
+    final mapview = DivElement()..id = 'mapview';
+    element.id = 'element';
+    element.children = [ParagraphElement()..text = 'Visio Web', mapview];
 
     // ignore: undefined_prefixed_name
     ui.platformViewRegistry.registerViewFactory(
-      'iframeElement',
-      (int viewId) => _iframeElement,
+      'element',
+      (int viewId) => element,
     );
 
-    // final _element = html.DivElement()..id = 'vg_mapviewer';
-
-    // final map = MapViewer();
-    // map.initialize(_element, {
-    //   'logoPosition': 'TOP_RIGHT',
-    //   'path':
-    //       'https://mapserver.visioglobe.com/kd9426d8cb3f1c532f22b5bcbd325c280bd351feb/descriptor.json',
-    // });
+    final map = MapViewer(
+      MapViewerParameters(
+        path:
+            'https://mapserver.visioglobe.com/kd9426d8cb3f1c532f22b5bcbd325c280bd351feb/descriptor.json',
+      ),
+    );
+    map.load().then(() {
+      return map.setupView(mapview);
+    });
   }
 
   @override
@@ -66,13 +72,14 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Center(
-        child: HtmlElementView(
-          key: UniqueKey(),
-          viewType: 'iframeElement',
+      body: Expanded(
+        child: Center(
+          child: HtmlElementView(
+            key: UniqueKey(),
+            viewType: 'element',
+          ),
         ),
       ),
-      //HtmlElementView(key: UniqueKey(), viewType: "vg_mapviewer")),
     );
   }
 }

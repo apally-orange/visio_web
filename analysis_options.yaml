@@ -1,3 +1,4 @@
 analyzer:
   errors:
     undefined_prefixed_name: ignore
+    missing_js_lib_annotation: ignore

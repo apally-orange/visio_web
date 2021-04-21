@@ -1,13 +1,21 @@
 @JS('visioweb')
 library visioweb;
 
+import 'dart:async';
+
 import 'package:js/js.dart';
 
 @JS('Mapviewer')
 class MapViewer {
-  external MapViewer();
-  external initialize(Object mapDiv, Object parameters);
-  external start();
+  external MapViewer(Object parameters);
+  //external initialize(Object mapDiv);
+  external load();
+  external setupView(Object mapview);
+}
+
+class MapViewerParameters {
+  MapViewerParameters({this.path});
+  String path;
 }
 
 // @JS('google.maps')
