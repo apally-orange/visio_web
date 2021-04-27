@@ -1,44 +1,77 @@
 @JS('visioweb')
 library visioweb;
 
-import 'dart:async';
-
 import 'package:js/js.dart';
 
 @JS('Mapviewer')
 class MapViewer {
-  external MapViewer(Object parameters);
-  //external initialize(Object mapDiv);
+  external MapViewer(parameters);
   external load();
-  external setupView(Object mapview);
+  external start();
+  external setupView(mapview);
+  external resize(width, height);
+  external setupMultiBuildingView(
+      Object parameters, Object multifloorConfig, double stackGap);
+  @JS()
+  external CameraDrivenExplorer get cameraDrivenExplorer;
+  @JS()
+  external MultiBuildingView get multiBuildingView;
+}
+
+@JS('CameraDrivenExplorer')
+class CameraDrivenExplorer {
+  external setEnabled(bool enable);
+}
+
+@JS('MultiBuildingView')
+class MultiBuildingView {
+  external goTo(parameters);
+}
+
+class GotTorParameters {
+  GotTorParameters({
+    this.mode,
+    this.animationDuration,
+  });
+
+  final String mode;
+  final double animationDuration;
 }
 
 class MapViewerParameters {
-  MapViewerParameters({this.path});
-  String path;
+  MapViewerParameters({
+    this.path,
+    this.initialFloor,
+  });
+
+  final String path;
+  final String initialFloor;
 }
 
-// @JS('google.maps')
-// library maps;
+class MultiBuildingParameters {
+  MultiBuildingParameters(
+    this.container,
+    this.containerDivSelector,
+    this.viewType,
+    this.animationType,
+  );
 
-// import 'package:js/js.dart';
+  Object container;
+  String containerDivSelector;
+  String viewType;
+  String animationType;
+}
 
-// // Invokes the JavaScript getter `google.maps.map`.
-// external Map get map;
+class MultifloorConfig {
+  MultifloorConfig(
+    this.click,
+    this.rotation,
+    this.pitch,
+    this.zoom,
+  );
 
-// // The `Map` constructor invokes JavaScript `new google.maps.Map(location)`
-// @JS()
-// class Map {
-//   external Map(Location location);
-//   external Location getLocation();
-// }
-
-// // The `Location` constructor invokes JavaScript `new google.maps.LatLng(...)`
-// //
-// // We recommend against using custom JavaScript names whenever
-// // possible. It is easier for users if the JavaScript names and Dart names
-// // are consistent.
-// @JS('LatLng')
-// class Location {
-//   external Location(num lat, num lng);
-// }
+  bool click;
+  bool rotation;
+  bool pitch;
+  bool zoom;
+}

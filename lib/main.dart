@@ -33,37 +33,57 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  MapViewer map;
+
   @override
   void initState() {
     super.initState();
 
-    // final _iframeElement = IFrameElement();
-
-    // _iframeElement.height = '500';
-    // _iframeElement.width = '500';
-    // _iframeElement.src = 'https://www.youtube.com/embed/RQzhAQlg2JQ';
-    // _iframeElement.style.border = 'none';
-
-    final element = DivElement();
-    final mapview = DivElement()..id = 'mapview';
-    element.id = 'element';
-    element.children = [ParagraphElement()..text = 'Visio Web', mapview];
+    final mapview = IFrameElement()
+      ..id = 'mapview'
+      ..style.border = 'none';
 
     // ignore: undefined_prefixed_name
     ui.platformViewRegistry.registerViewFactory(
       'element',
-      (int viewId) => element,
+      (int viewId) => mapview,
     );
 
-    final map = MapViewer(
+    map = MapViewer(
       MapViewerParameters(
         path:
             'https://mapserver.visioglobe.com/kd9426d8cb3f1c532f22b5bcbd325c280bd351feb/descriptor.json',
+        initialFloor: 'B4-UL00',
       ),
     );
+
     map.load().then(() {
-      return map.setupView(mapview);
+      map.setupView(mapview);
+      map.start();
+      map.setupMultiBuildingView(
+        MultiBuildingParameters(
+          mapview,
+          '',
+          'multibuilding',
+          'both',
+        ),
+        MultifloorConfig(true, true, true, true),
+        0,
+      );
+      map.cameraDrivenExplorer.setEnabled(true);
+
+      goToHome();
     });
+  }
+
+  void goToHome() {
+    print('hello');
+    map.multiBuildingView.goTo(
+      GotTorParameters(
+        mode: 'global',
+        animationDuration: 500,
+      ),
+    );
   }
 
   @override
@@ -72,13 +92,13 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Expanded(
-        child: Center(
-          child: HtmlElementView(
-            key: UniqueKey(),
-            viewType: 'element',
-          ),
-        ),
+      body: HtmlElementView(
+        key: UniqueKey(),
+        viewType: 'element',
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => goToHome(),
+        child: Icon(Icons.home),
       ),
     );
   }
