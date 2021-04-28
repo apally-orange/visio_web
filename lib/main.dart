@@ -50,40 +50,45 @@ class _MyHomePageState extends State<MyHomePage> {
       (int viewId) => mapview,
     );
 
-    map = MapViewer(
-      MapViewerParameters(
-        path:
-            'https://mapserver.visioglobe.com/kd9426d8cb3f1c532f22b5bcbd325c280bd351feb/descriptor.json',
-        initialFloor: 'B4-UL00',
-      ),
-    );
+    map = MapViewer();
 
-    map.load().then(() {
-      map.setupView(mapview);
-      map.start();
-      map.setupMultiBuildingView(
-        MultiBuildingParameters(
-          mapview,
-          '',
-          'multibuilding',
-          'both',
-        ),
-        MultifloorConfig(true, true, true, true),
-        0,
-      );
-      map.cameraDrivenExplorer.setEnabled(true);
+    map
+        .load(
+          MapViewerParameters(
+            path:
+                'https://mapserver.visioglobe.com/kd9426d8cb3f1c532f22b5bcbd325c280bd351feb/descriptor.json',
+            initialFloor: 'B4-UL00',
+          ),
+        )
+        .then(
+          () => map.setupView(mapview).then(() {
+            map.start();
+            map.setupMultiBuildingView(
+              MultiBuildingParameters(
+                container: mapview,
+                viewType: 'multibuilding',
+                animationType: 'perspective',
+              ),
+              MultifloorConfig(
+                click: true,
+                rotation: true,
+                pitch: true,
+                zoom: true,
+              ),
+              0,
+            );
+            map.cameraDrivenExplorer.maxExploreDistance = 300.0;
+            map.cameraDrivenExplorer.setEnabled(true);
 
-      goToHome();
-    });
+            goToHome();
+          }),
+        );
   }
 
   void goToHome() {
-    print('hello');
+    print('hello ${map.cameraDrivenExplorer.maxExploreDistance}');
     map.multiBuildingView.goTo(
-      GotTorParameters(
-        mode: 'global',
-        animationDuration: 500,
-      ),
+      GoToParameters(mode: 'global'),
     );
   }
 

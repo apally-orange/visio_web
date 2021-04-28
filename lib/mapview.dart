@@ -5,13 +5,16 @@ import 'package:js/js.dart';
 
 @JS('Mapviewer')
 class MapViewer {
-  external MapViewer(parameters);
-  external load();
+  external MapViewer();
+  external load(parameters);
   external start();
   external setupView(mapview);
   external resize(width, height);
   external setupMultiBuildingView(
-      Object parameters, Object multifloorConfig, double stackGap);
+    Object parameters,
+    Object multifloorConfig,
+    double stackGap,
+  );
   @JS()
   external CameraDrivenExplorer get cameraDrivenExplorer;
   @JS()
@@ -20,58 +23,65 @@ class MapViewer {
 
 @JS('CameraDrivenExplorer')
 class CameraDrivenExplorer {
+  external get maxExploreDistance;
+  external set maxExploreDistance(double value);
   external setEnabled(bool enable);
 }
 
 @JS('MultiBuildingView')
 class MultiBuildingView {
+  external String get DEFAULT;
   external goTo(parameters);
 }
 
-class GotTorParameters {
-  GotTorParameters({
-    this.mode,
-    this.animationDuration,
-  });
+@JS()
+@anonymous
+class GoToParameters {
+  external String get mode;
 
-  final String mode;
-  final double animationDuration;
+  external factory GoToParameters({String mode});
 }
 
+@JS()
+@anonymous
 class MapViewerParameters {
-  MapViewerParameters({
-    this.path,
-    this.initialFloor,
+  external factory MapViewerParameters({
+    String path,
+    String initialFloor,
   });
 
-  final String path;
-  final String initialFloor;
+  external String get path;
+  external String get initialFloor;
 }
 
+@JS()
+@anonymous
 class MultiBuildingParameters {
-  MultiBuildingParameters(
-    this.container,
-    this.containerDivSelector,
-    this.viewType,
-    this.animationType,
-  );
+  external factory MultiBuildingParameters({
+    Object container,
+    String containerDivSelector,
+    String viewType,
+    String animationType,
+  });
 
-  Object container;
-  String containerDivSelector;
-  String viewType;
-  String animationType;
+  external Object get container;
+  external String get containerDivSelector;
+  external String get viewType;
+  external String get animationType;
 }
 
+@JS()
+@anonymous
 class MultifloorConfig {
-  MultifloorConfig(
-    this.click,
-    this.rotation,
-    this.pitch,
-    this.zoom,
-  );
+  external factory MultifloorConfig({
+    bool click,
+    bool rotation,
+    bool pitch,
+    bool zoom,
+  });
 
-  bool click;
-  bool rotation;
-  bool pitch;
-  bool zoom;
+  external bool get click;
+  external bool get rotation;
+  external bool get pitch;
+  external bool get zoom;
 }
