@@ -3,6 +3,7 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:poc_web_visioglobe/mapview.dart';
+import 'package:pointer_interceptor/pointer_interceptor.dart';
 
 void main() {
   runApp(MyApp());
@@ -87,6 +88,16 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    print('didChangeDependencies');
+    map?.resize(
+      MediaQuery.of(context).size.width,
+      MediaQuery.of(context).size.height,
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -96,9 +107,11 @@ class _MyHomePageState extends State<MyHomePage> {
         key: UniqueKey(),
         viewType: 'element',
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => goToHome(),
-        child: Icon(Icons.home),
+      floatingActionButton: PointerInterceptor(
+        child: FloatingActionButton(
+          onPressed: () => goToHome(),
+          child: Icon(Icons.home),
+        ),
       ),
     );
   }
